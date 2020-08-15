@@ -1,0 +1,11 @@
+- name: ufw ~> ensure required package installed
+  package:
+    name: ufw
+    state: present
+    
+- name: ufw ~> allow mosquitto ports
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: tcp
+  loop: "{{ mqtt_listeners }}"

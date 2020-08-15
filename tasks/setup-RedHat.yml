@@ -1,0 +1,12 @@
+- name: yum ~> enable remi repo
+  yum_repository:
+    name: remi
+    description: Remi Repo
+    baseurl: http://rpms.remirepo.net/enterprise/{{ ansible_distribution_major_version }}/remi/$basearch/
+    mirrorlist: http://cdn.remirepo.net/enterprise/{{ ansible_distribution_major_version }}/remi/$basearch/mirror
+    gpgkey: https://rpms.remirepo.net/RPM-GPG-KEY-remi2018
+    enabled: yes
+
+- name: fact ~> set distribution custom var
+  set_fact:
+    mqtt_firewall: firewalld

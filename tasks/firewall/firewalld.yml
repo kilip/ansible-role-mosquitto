@@ -1,0 +1,6 @@
+- name: firewalld ~> configure ports
+  firewalld:
+    port: "{{ item.port }}/tcp"
+    permanent: yes
+    state: enabled
+  loop: "{{ mqtt_listeners }}"

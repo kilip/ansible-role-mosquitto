@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  pre_tasks:
+  - name: include pre-tasks
+    include: ./include/pre-task.yml
+  - name: include vars
+    include_vars: ./include/vars.yml
+  tasks:
+    - name: "Include mosquitto"
+      include_role:
+        name: "mosquitto"

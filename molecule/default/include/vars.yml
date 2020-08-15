@@ -1,0 +1,20 @@
+mqtt_configure_firewall: true
+
+mqtt_users:
+- username: foo
+  password: bar
+- username: hello
+  password: world
+
+mqtt_listeners:
+- port: 1883
+- port: 8883
+  options: |
+    certfile /etc/mosquitto/cert/mosquitto.cert
+    keyfile /etc/mosquitto/cert/mosquitto.pem
+
+mqtt_config: |
+  allow_anonymous false
+  password_file {{ mqtt_password_file }}
+  persistence true
+  connection_messages true

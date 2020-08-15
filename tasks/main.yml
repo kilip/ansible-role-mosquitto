@@ -1,0 +1,36 @@
+---
+# tasks file for mosquitto
+- include: "setup-{{ ansible_os_family }}.yml"
+
+- name: package ~> ensure mosquitto and htpasswd installed
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - mosquitto
+
+- name: service ~> ensure mosquitto enabled and started
+  service:
+    name: mosquitto
+    state: started
+    enabled: yes
+
+- name: include ~> firewall config for "{{ mqtt_firewall }}"
+  include: "firewall/{{ mqtt_firewall }}.yml"
+  when: mqtt_configure_firewall
+
+- include: password.yml
+
+- name: template ~> render mosquitto.conf
+  template:
+    src: mosquitto.conf.j2
+    dest: "{{ mqtt_config_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  notify:
+  - mosquitto restart
+
+- name: include ~> influxdb tasks
+  include_tasks: influxdb.yml

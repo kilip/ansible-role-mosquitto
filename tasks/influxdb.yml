@@ -1,0 +1,15 @@
+- name: "influxdb ~> ensure telegraf packages installed"
+  package:
+    name: telegraf
+    state: present
+
+- name: influxdb ~> configure telegraf
+  template:
+    src: telegraf.conf.j2
+    dest: /etc/telegraf/telegraf.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  notify:
+  - telegraf restart

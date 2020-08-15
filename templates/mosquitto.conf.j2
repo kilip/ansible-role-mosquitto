@@ -1,0 +1,10 @@
+{% if mqtt_use_influxdb %}
+{% endif %}
+
+{{ mqtt_config }}
+
+{% for item in mqtt_listeners %}
+listener {{ item.port }} {{ item.address is defined and item.address or "" }}
+{% if item.options is defined %}{{ item.options }}{% endif %}
+
+{% endfor %}

@@ -1,0 +1,52 @@
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=600
+  when: ansible_os_family == 'Debian'
+
+- name: package ~> install firewalld on RedHat
+  package:
+    name: firewalld
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: package ~> install ufw on Debian
+  package:
+    name: ufw
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: replace ~> disable ipv6 firewall
+  replace:
+    path: /etc/default/ufw
+    regexp: '^IPV6=yes$'
+    replace: 'IPV6=no'
+  when: ansible_os_family == 'Debian'
+
+- name: pip install for openssl
+  pip:
+    name: cryptography
+    state: present
+
+- name: file ~> create openssl dir
+  file:
+    path: /etc/mosquitto/cert
+    state: directory
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Generate an OpenSSL private key with the default values
+  openssl_privatekey:
+    path: /etc/mosquitto/cert/mosquitto.pem
+
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: /etc/mosquitto/cert/mosquitto.csr
+    privatekey_path: /etc/mosquitto/cert/mosquitto.pem
+    common_name: test.itstoni.com
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: /etc/mosquitto/cert/mosquitto.crt
+    privatekey_path: /etc/mosquitto/cert/mosquitto.pem
+    csr_path: /etc/mosquitto/cert/mosquitto.csr
+    provider: selfsigned

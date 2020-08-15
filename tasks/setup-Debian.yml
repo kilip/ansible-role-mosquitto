@@ -1,0 +1,15 @@
+- name: fact ~> set distribution custom var
+  set_fact:
+    mqtt_firewall: ufw
+
+#- name: apt ~> enable universe repository
+#  apt_repository:
+#    repo: "deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release|lower }} universe"
+#    state: present
+#    update_cache: yes
+#  when: ansible_distribution == 'Ubuntu'
+
+- name: package ~> install mosquitto client
+  package:
+    name: mosquitto-clients
+    state: present

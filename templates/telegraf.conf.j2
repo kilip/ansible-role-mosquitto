@@ -1,0 +1,10 @@
+[[outputs.influxdb]]
+   urls = ["{{ mqtt_influxdb_url }}"]
+   database = "{{ mqtt_influxdb_database }}"
+   username = "{{ mqtt_influxdb_user }}"
+   password = "{{ mqtt_influxdb_password }}"
+
+[[inputs.mqtt_consumer]]
+    servers = ["tcp://raspberry_pi_ip:1883"]
+    topics = [{{ mqtt_influxdb_topics|map('quote')|join(', ') }}]
+    data_format = "influx"
